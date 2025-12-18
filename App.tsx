@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SectionId } from './types';
 import GridBackground from './components/Layout/GridBackground';
-import ThreadsBackground from './components/Layout/ThreadsBackground';
+import ParticleBackground from './components/Layout/ParticleBackground';
 import { RevealOnScroll } from './components/Layout/RevealOnScroll';
 import Navigation from './components/Layout/Navigation';
 import Hero from './components/Sections/Hero';
@@ -40,7 +40,7 @@ const App: React.FC = () => {
       </div>
 
       <GridBackground />
-      <ThreadsBackground />
+      <ParticleBackground />
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
 
       <main className="relative z-10">
