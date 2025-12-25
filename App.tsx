@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SectionId } from './types';
 import GridBackground from './components/Layout/GridBackground';
+import Scanline from './components/Layout/Scanline';
 import ParticleBackground from './components/Layout/ParticleBackground';
 import { RevealOnScroll } from './components/Layout/RevealOnScroll';
 import Navigation from './components/Layout/Navigation';
@@ -40,6 +41,7 @@ const App: React.FC = () => {
       </div>
 
       <GridBackground />
+      <Scanline />
       <ParticleBackground />
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
 

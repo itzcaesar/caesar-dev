@@ -97,10 +97,28 @@ const ParticleBackground: React.FC = () => {
     const animate = () => {
       if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      particles.forEach(particle => {
+
+      particles.forEach((particle, index) => {
         particle.update();
         particle.draw();
+
+        // Draw connections
+        for (let j = index; j < particles.length; j++) {
+          const dx = particle.x - particles[j].x;
+          const dy = particle.y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const maxDistance = 100;
+
+          if (distance < maxDistance) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / maxDistance)})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+            ctx.closePath();
+          }
+        }
       });
 
       animationFrameId = requestAnimationFrame(animate);

@@ -1,87 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>M. Caesar Rifqi | Creative Engineer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Space Grotesk', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            colors: {
-              sw: {
-                black: '#050505', // Deep Black
-                dark: '#111111', // Almost Black
-                gray: '#222222', // Dark Gray
-                light: '#e4e4e7', // Zinc 200
-                white: '#ffffff', // Pure White
-                accent: '#ccff00', // Acid Lime
-              },
-            },
-            backgroundImage: {
-              'grid-pattern': "linear-gradient(to right, #222222 1px, transparent 1px), linear-gradient(to bottom, #222222 1px, transparent 1px)",
-            },
-            animation: {
-              'scan': 'scan 4s linear infinite',
-            },
-            keyframes: {
-              scan: {
-                '0%': { transform: 'translateY(-100%)' },
-                '100%': { transform: 'translateY(100%)' },
-              }
-            }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M. Caesar Rifqi | Creative Engineer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
           },
+          colors: {
+            sw: {
+              black: '#050505', // Deep Black
+              dark: '#111111', // Almost Black
+              gray: '#222222', // Dark Gray
+              light: '#e4e4e7', // Zinc 200
+              white: '#ffffff', // Pure White
+              accent: '#ccff00', // Acid Lime
+            },
+          },
+          backgroundImage: {
+            'grid-pattern': "linear-gradient(to right, #222222 1px, transparent 1px), linear-gradient(to bottom, #222222 1px, transparent 1px)",
+          },
+          animation: {
+            'scan': 'scan 4s linear infinite',
+          },
+          keyframes: {
+            scan: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(100%)' },
+            }
+          }
         },
-      };
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-    <style>
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 4px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #050505;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #333;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #ccff00;
-      }
-      
-      body {
-        background-color: #050505;
-        color: #ffffff;
-        overflow-x: hidden;
-      }
-      
+      },
+    };
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ccff00;
+    }
+
+    body {
+      background-color: #050505;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    * {
+      cursor: none !important;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
       * {
-        cursor: none !important;
+        cursor: auto !important;
       }
+    }
 
-      @media (hover: none) and (pointer: coarse) {
-        * {
-          cursor: auto !important;
-        }
-      }
+    .stroke-text {
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+      color: transparent;
+      transition: 0.3s;
+    }
 
-      .stroke-text {
-        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
-        color: transparent;
-        transition: 0.3s;
-      }
-      
-      .stroke-text:hover {
-        color: #ccff00;
-        -webkit-text-stroke: 1px #ccff00;
-      }
-    </style>
+    .stroke-text:hover {
+      color: #ccff00;
+      -webkit-text-stroke: 1px #ccff00;
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -93,10 +99,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>

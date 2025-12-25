@@ -13,28 +13,46 @@ const Projects: React.FC = () => {
   return (
     <section id="projects" className="py-32 px-6 bg-sw-black relative z-20 border-t border-white/10">
       <div className="max-w-[1400px] mx-auto w-full">
-        
+
         <div className="flex items-end justify-between mb-20">
-           <div className="flex flex-col gap-2">
-             <span className="font-mono text-sw-accent text-xs">{t.subtitle}</span>
-             <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">{t.title}</h2>
-           </div>
-           <p className="hidden md:block text-gray-500 font-mono text-xs text-right max-w-xs">
-             {t.archive}<br/>
-             {t.period}
-           </p>
+          <div className="flex flex-col gap-2">
+            <span className="font-mono text-sw-accent text-xs">{t.subtitle}</span>
+            <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">{t.title}</h2>
+          </div>
+          <p className="hidden md:block text-gray-500 font-mono text-xs text-right max-w-xs">
+            {t.archive}<br />
+            {t.period}
+          </p>
         </div>
 
         <div className="flex flex-col border-t border-white/10">
           {PROJECTS.map((project, index) => (
-            <div 
+            <div
               key={project.id}
-              className="group relative border-b border-white/10 transition-colors hover:bg-white/5"
+              className="group relative border-b border-white/10 transition-colors bg-sw-black"
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+              }}
             >
-              <div 
-                className="flex flex-col md:flex-row md:items-center justify-between py-10 px-2 cursor-pointer"
+              {/* Spotlight Effect Border */}
+              <div
+                className="absolute inset-0 z-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(204, 255, 0, 0.15), transparent 40%)`
+                }}
+              />
+              <div
+                className="absolute inset-x-0 bottom-0 h-px z-10 bg-gradient-to-r from-transparent via-sw-accent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              />
+
+              <div
+                className="relative z-10 flex flex-col md:flex-row md:items-center justify-between py-10 px-2 cursor-pointer"
                 data-cursor-text={t.examine}
               >
                 {/* ID & Title */}
@@ -51,20 +69,20 @@ const Projects: React.FC = () => {
 
                 {/* Description & Tags - Fades in/out on desktop */}
                 <div className="w-full md:w-1/2 flex flex-col md:flex-row justify-between items-start md:items-center mt-4 md:mt-0 gap-6">
-                   <p className="text-gray-400 text-sm max-w-xs hidden md:block opacity-60 group-hover:opacity-100 transition-opacity">
-                     {project.description}
-                   </p>
-                   
-                   <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-                      <div className="flex gap-2">
-                        {project.tags.map(tag => (
-                          <span key={tag} className="text-[10px] font-mono border border-white/10 text-gray-400 px-2 py-1 uppercase group-hover:border-sw-accent group-hover:text-sw-accent transition-colors">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <ArrowUpRight className="text-sw-accent opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
-                   </div>
+                  <p className="text-gray-400 text-sm max-w-xs hidden md:block opacity-60 group-hover:opacity-100 transition-opacity">
+                    {project.description}
+                  </p>
+
+                  <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                    <div className="flex gap-2">
+                      {project.tags.map(tag => (
+                        <span key={tag} className="text-[10px] font-mono border border-white/10 text-gray-400 px-2 py-1 uppercase group-hover:border-sw-accent group-hover:text-sw-accent transition-colors">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <ArrowUpRight className="text-sw-accent opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
+                  </div>
                 </div>
               </div>
             </div>

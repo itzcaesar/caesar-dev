@@ -18,14 +18,14 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
 
   return (
     <div className="fixed top-0 left-0 w-full z-40 pointer-events-none flex justify-center pt-8 px-6">
-      <motion.header 
+      <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "circOut" }}
         className="pointer-events-auto w-full max-w-[1400px] flex justify-between items-start"
       >
-        {/* Left: ID */}
-        <div className="backdrop-blur border bg-sw-black/80 border-white/20 p-4 flex flex-col gap-1">
+        {/* Left: ID (Desktop) / Language Toggle (Mobile) */}
+        <div className="hidden md:flex backdrop-blur border bg-sw-black/80 border-white/20 p-4 flex-col gap-1">
           <h1 className="font-bold text-sm tracking-tight leading-none text-white">
             M. CAESAR RIFQI
           </h1>
@@ -34,6 +34,15 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
             <p className="text-[10px] font-mono text-gray-400">ONLINE // V.2.0.4</p>
           </div>
         </div>
+
+        {/* Mobile Language Toggle - Right Side */}
+        <button
+          onClick={toggleLanguage}
+          className="md:hidden backdrop-blur border bg-sw-black/80 border-white/20 p-4 transition-colors hover:border-sw-accent group ml-auto"
+          title={language === 'en' ? 'Switch to Indonesian' : 'Switch to English'}
+        >
+          <Globe size={16} className="transition-colors text-gray-400 group-hover:text-sw-accent" />
+        </button>
 
         {/* Center: Nav - Floating Island Style */}
         <nav className="hidden md:flex backdrop-blur border bg-sw-black/80 border-white/20 px-6 py-3 items-center gap-8">
@@ -52,7 +61,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
               <span className={`text-xs uppercase font-bold tracking-wider transition-colors ${activeSection === item ? 'text-white' : 'text-gray-500 group-hover:text-white'}`}>
                 {t.nav[item]}
               </span>
-              
+
               {/* Active Dot */}
               <div className={`absolute -bottom-1 w-1 h-1 bg-sw-accent transition-all duration-300 ${activeSection === item ? 'opacity-100' : 'opacity-0'}`} />
             </button>
@@ -62,7 +71,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
         {/* Right: Toggles & Context */}
         <div className="hidden md:flex backdrop-blur border bg-sw-black/80 border-white/20 p-4 gap-4 items-center">
           {/* Language Toggle */}
-          <button 
+          <button
             onClick={toggleLanguage}
             className="p-2 border border-white/20 transition-colors hover:border-sw-accent group"
             title={language === 'en' ? 'Switch to Indonesian' : 'Switch to English'}
@@ -76,14 +85,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
           </div>
         </div>
 
-        {/* Mobile Menu Icon */}
-        <div className="md:hidden backdrop-blur border bg-sw-black/80 border-white/20 p-4 cursor-pointer">
-           <div className="space-y-1.5">
-             <div className="w-5 h-0.5 bg-white"></div>
-             <div className="w-3 h-0.5 ml-auto bg-white"></div>
-             <div className="w-5 h-0.5 bg-white"></div>
-           </div>
-        </div>
       </motion.header>
     </div>
   );

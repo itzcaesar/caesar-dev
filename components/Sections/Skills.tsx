@@ -12,8 +12,8 @@ const Skills: React.FC = () => {
   const categories = Array.from(new Set(SKILLS.map(skill => skill.category)));
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(category) 
+    setExpandedCategories(prev =>
+      prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
     );
@@ -22,16 +22,16 @@ const Skills: React.FC = () => {
   return (
     <section id="skills" className="py-32 px-6 bg-sw-black border-t border-white/10">
       <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12">
-        
+
         <div className="lg:col-span-3">
-           <div className="lg:sticky lg:top-40">
-             <span className="inline-block px-3 py-1 border border-sw-accent text-sw-accent font-mono text-xs uppercase mb-4">
-               {t.subtitle}
-             </span>
-             <p className="text-gray-500 text-xs font-mono max-w-[200px]">
-               {t.system}
-             </p>
-           </div>
+          <div className="lg:sticky lg:top-40">
+            <span className="inline-block px-3 py-1 border border-sw-accent text-sw-accent font-mono text-xs uppercase mb-4">
+              {t.subtitle}
+            </span>
+            <p className="text-gray-500 text-xs font-mono max-w-[200px]">
+              {t.system}
+            </p>
+          </div>
         </div>
 
         <div className="lg:col-span-9 space-y-6">
@@ -74,41 +74,50 @@ const Skills: React.FC = () => {
                     >
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
                         {categorySkills.map((skill) => (
-                          <div key={skill.name} className="bg-sw-black p-8 group hover:bg-white/[0.02] transition-colors relative overflow-hidden">
+                          <motion.div
+                            key={skill.name}
+                            className="bg-sw-black p-8 group hover:bg-white/[0.02] transition-colors relative overflow-hidden ring-1 ring-white/5 hover:ring-sw-accent/50"
+                            whileHover={{ scale: 1.02, zIndex: 10 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                          >
                             {/* Hover Corner */}
-                            <div className="absolute top-0 right-0 w-0 h-0 border-t-[20px] border-r-[20px] border-t-transparent border-r-sw-accent opacity-0 group-hover:opacity-100 transition-opacity" />
-                            
-                            <div className="flex justify-between items-start mb-8">
-                              <h4 className="font-mono text-xs text-gray-500 uppercase tracking-widest border border-white/10 px-2 py-1">
+                            <div className="absolute top-0 right-0 w-0 h-0 border-t-[30px] border-r-[30px] border-t-transparent border-r-sw-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                            {/* Hover Glow */}
+                            <div className="absolute -inset-1 bg-sw-accent/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                            <div className="flex justify-between items-start mb-8 relative z-10">
+                              <h4 className="font-mono text-xs text-gray-500 uppercase tracking-widest border border-white/10 px-2 py-1 group-hover:border-sw-accent/50 group-hover:text-sw-accent transition-colors">
                                 {skill.name.replace(/_/g, ' ')}
                               </h4>
                               <span className="font-mono text-sw-accent text-sm">
                                 {skill.level}%
                               </span>
                             </div>
-                            
+
                             {/* Tech Progress Bar */}
-                            <div className="w-full h-2 bg-white/5 relative flex gap-1">
+                            <div className="w-full h-2 bg-white/5 relative flex gap-1 z-10">
                               {[...Array(10)].map((_, i) => {
                                 const isFilled = (skill.level / 10) > i;
                                 return (
-                                  <motion.div 
+                                  <motion.div
                                     key={i}
                                     className="h-full flex-1"
                                     initial={{ opacity: 0, backgroundColor: isFilled ? '#ccff00' : 'transparent' }}
-                                    whileInView={{ 
+                                    whileInView={{
                                       opacity: isFilled ? 1 : 0,
+                                      backgroundColor: isFilled ? '#ccff00' : '#222'
                                     }}
                                     viewport={{ once: true }}
-                                    transition={{ 
-                                      duration: 0.2, 
+                                    transition={{
+                                      duration: 0.2,
                                       delay: i * 0.05
                                     }}
                                   />
                                 );
                               })}
                             </div>
-                          </div>
+                          </motion.div>
                         ))}
                       </div>
                     </motion.div>
