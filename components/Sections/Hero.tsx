@@ -4,6 +4,8 @@ import { useApp } from '../../contexts/AppContext';
 import { useSound } from '../../contexts/AudioContext';
 import { translations } from '../../locales/translations';
 
+import { DecryptText } from '../UI/DecryptText';
+
 const Hero: React.FC = () => {
   const { language } = useApp();
   const { playSound } = useSound();
@@ -21,11 +23,11 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.8 }}
           >
             <p className="font-mono text-sw-accent text-xs mb-6 tracking-widest">
-              {t.bootSequence}
+              <DecryptText text={t.bootSequence} speed={30} />
             </p>
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight uppercase leading-[1.1] mb-8 text-white">
-              Muhammad Caesar
+              <DecryptText text="Muhammad Caesar" speed={50} />
               <span className="block">Rifqi</span>
             </h1>
 
@@ -37,7 +39,9 @@ const Hero: React.FC = () => {
 
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter uppercase leading-[0.9]">
               <span className="text-transparent stroke-text">{t.softwareEngineer.split(' ')[0]}</span>
-              <span className="block text-white">{t.softwareEngineer.split(' ').slice(1).join(' ')}</span>
+              <span className="block text-white">
+                <DecryptText text={t.softwareEngineer.split(' ').slice(1).join(' ')} speed={40} />
+              </span>
             </h2>
 
             <div className="flex items-center gap-6 my-2">
@@ -48,7 +52,9 @@ const Hero: React.FC = () => {
 
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter uppercase leading-[0.9] text-right">
               <span className="text-white">{t.gameDeveloper.split(' ')[0]}</span>
-              <span className="block text-sw-accent">{t.gameDeveloper.split(' ').slice(1).join(' ')}</span>
+              <span className="block text-sw-accent">
+                <DecryptText text={t.gameDeveloper.split(' ').slice(1).join(' ')} speed={40} />
+              </span>
             </h2>
           </motion.div>
 

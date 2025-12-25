@@ -13,10 +13,22 @@ import Contact from './components/Sections/Contact';
 import CustomCursor from './components/Layout/CustomCursor';
 import { AudioProvider } from './contexts/AudioContext';
 
+import { AnimatePresence } from 'framer-motion';
+import { BootSequence } from './components/Layout/BootSequence';
+import { ScrollRadar } from './components/Layout/ScrollRadar';
+
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionId>('hero');
+  const [showBoot, setShowBoot] = useState(false);
 
   useEffect(() => {
+    // Check if it's the first visit in this session
+    const hasBooted = sessionStorage.getItem('caesar_boot_sequence');
+    if (!hasBooted) {
+      setShowBoot(true);
+      sessionStorage.setItem('caesar_boot_sequence', 'true');
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -37,6 +49,10 @@ const App: React.FC = () => {
   return (
     <AudioProvider>
       <div className="min-h-screen relative font-sans bg-sw-black text-sw-white selection:bg-sw-accent selection:text-black">
+        <AnimatePresence>
+          {showBoot && <BootSequence onComplete={() => setShowBoot(false)} />}
+        </AnimatePresence>
+
         <div className="hidden md:block">
           <CustomCursor />
         </div>
@@ -45,6 +61,7 @@ const App: React.FC = () => {
         <Scanline />
         <ParticleBackground />
         <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+        <ScrollRadar activeSection={activeSection} setActiveSection={setActiveSection} />
 
         <main className="relative z-10">
           <Hero />
