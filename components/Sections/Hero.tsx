@@ -1,10 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useApp } from '../../contexts/AppContext';
+import { useSound } from '../../contexts/AudioContext';
 import { translations } from '../../locales/translations';
 
 const Hero: React.FC = () => {
   const { language } = useApp();
+  const { playSound } = useSound();
   const t = translations[language].hero;
 
   return (
@@ -91,7 +93,11 @@ const Hero: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05, x: 5 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  playSound('click');
+                  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                onMouseEnter={() => playSound('hover')}
                 className="border border-white/20 px-6 py-3 font-mono text-xs uppercase transition-colors hover:bg-white hover:text-black relative overflow-hidden group"
                 data-cursor-text="VIEW"
               >

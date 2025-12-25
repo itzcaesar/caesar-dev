@@ -11,7 +11,7 @@ import Projects from './components/Sections/Projects';
 import Skills from './components/Sections/Skills';
 import Contact from './components/Sections/Contact';
 import CustomCursor from './components/Layout/CustomCursor';
-import { useApp } from './contexts/AppContext';
+import { AudioProvider } from './contexts/AudioContext';
 
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionId>('hero');
@@ -35,32 +35,34 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen relative font-sans bg-sw-black text-sw-white selection:bg-sw-accent selection:text-black">
-      <div className="hidden md:block">
-        <CustomCursor />
+    <AudioProvider>
+      <div className="min-h-screen relative font-sans bg-sw-black text-sw-white selection:bg-sw-accent selection:text-black">
+        <div className="hidden md:block">
+          <CustomCursor />
+        </div>
+
+        <GridBackground />
+        <Scanline />
+        <ParticleBackground />
+        <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+
+        <main className="relative z-10">
+          <Hero />
+          <RevealOnScroll width="100%">
+            <About />
+          </RevealOnScroll>
+          <RevealOnScroll width="100%">
+            <Projects />
+          </RevealOnScroll>
+          <RevealOnScroll width="100%">
+            <Skills />
+          </RevealOnScroll>
+          <RevealOnScroll width="100%">
+            <Contact />
+          </RevealOnScroll>
+        </main>
       </div>
-
-      <GridBackground />
-      <Scanline />
-      <ParticleBackground />
-      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
-
-      <main className="relative z-10">
-        <Hero />
-        <RevealOnScroll width="100%">
-          <About />
-        </RevealOnScroll>
-        <RevealOnScroll width="100%">
-          <Projects />
-        </RevealOnScroll>
-        <RevealOnScroll width="100%">
-          <Skills />
-        </RevealOnScroll>
-        <RevealOnScroll width="100%">
-          <Contact />
-        </RevealOnScroll>
-      </main>
-    </div>
+    </AudioProvider>
   );
 };
 

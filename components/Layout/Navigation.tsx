@@ -2,8 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { SectionId } from '../../types';
 import { useApp } from '../../contexts/AppContext';
+import { useSound } from '../../contexts/AudioContext';
 import { translations } from '../../locales/translations';
-import { Globe } from 'lucide-react';
+import { Globe, Volume2, VolumeX } from 'lucide-react';
 
 interface NavigationProps {
   activeSection: SectionId;
@@ -14,6 +15,7 @@ const navItems: SectionId[] = ['hero', 'about', 'projects', 'skills', 'contact']
 
 const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection }) => {
   const { language, toggleLanguage } = useApp();
+  const { playSound, isMuted, toggleMute } = useSound();
   const t = translations[language];
 
   return (
@@ -30,7 +32,10 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
         {/* Mobile Language Toggle - Right Side */}
         <div className="absolute right-0 top-0 p-8 md:hidden">
           <button
-            onClick={toggleLanguage}
+            onClick={() => {
+              toggleLanguage();
+              playSound('click');
+            }}
             className="backdrop-blur border bg-sw-black/80 border-white/20 p-3 transition-colors hover:border-sw-accent group"
             title={language === 'en' ? 'Switch to Indonesian' : 'Switch to English'}
           >
@@ -43,7 +48,9 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
           {navItems.map((item, index) => (
             <button
               key={item}
+              onMouseEnter={() => playSound('hover')}
               onClick={() => {
+                playSound('click');
                 setActiveSection(item);
                 document.getElementById(item)?.scrollIntoView({ behavior: 'smooth' });
               }}
@@ -61,14 +68,43 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
             </button>
           ))}
 
+          {/* Divider */}
+          <div className="w-px h-8 bg-white/10"></div>
+
           {/* Desktop Language Toggle */}
-          <div className="w-px h-8 bg-white/10 mx-2"></div>
           <button
-            onClick={toggleLanguage}
-            className="group flex items-center justify-center h-8 w-8"
+            onClick={() => {
+              toggleLanguage();
+              playSound('click');
+            }}
+            onMouseEnter={() => playSound('hover')}
+            className="group flex items-center justify-center gap-2 h-8"
             title={language === 'en' ? 'Switch to Indonesian' : 'Switch to English'}
           >
-            <Globe size={18} className="transition-colors text-gray-400 group-hover:text-white" />
+            <Globe size={16} className="transition-colors text-gray-400 group-hover:text-white" />
+            <span className="font-mono text-xs text-gray-400 group-hover:text-sw-accent transition-colors">
+              {language === 'en' ? 'EN' : 'ID'}
+            </span>
+          </button>
+
+          {/* Divider */}
+          <div className="w-px h-8 bg-white/10"></div>
+
+          {/* Sound Toggle */}
+          <button
+            onClick={() => {
+              toggleMute();
+              playSound('toggle');
+            }}
+            onMouseEnter={() => playSound('hover')}
+            className="group flex items-center justify-center h-8 w-8"
+            title={isMuted ? 'Unmute UI Sounds' : 'Mute UI Sounds'}
+          >
+            {isMuted ? (
+              <VolumeX size={16} className="text-gray-500 group-hover:text-red-500 transition-colors" />
+            ) : (
+              <Volume2 size={16} className="text-gray-400 group-hover:text-sw-accent transition-colors" />
+            )}
           </button>
         </nav>
 
