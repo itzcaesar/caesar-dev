@@ -4,10 +4,10 @@ export const PROJECTS: Project[] = [
   {
     id: '001',
     title: 'AL-Store Landing Page',
-    description: 'Indonesian personal finance management app with OCR receipt scanning, budget tracking, visual reports, and local e-wallet/bank integration. Built with Next.js 15, NextAuth v5, Drizzle ORM.',
-    tags: ['Next.js', 'TypeScript', 'Drizzle'],
+    description: 'A landing page tailored for a hosting company with PayloadCMS and WeMX Integration and data sync such as discount, coupons and announcement.',
+    tags: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'NextJS', 'PayloadCMS'],
     imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&h=800&fit=crop&q=80',
-    repo: 'https://github.com/itzcaesar/tabung-in',
+    repo: 'https://alstoredev.my.id',
   },
   {
     id: '002',
@@ -27,11 +27,11 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '004',
-    title: 'VIRTUAL-LAB-SISJARKOM',
-    description: 'Virtual lab project for network systems course (SISJARKOM) at Telkom University.',
+    title: 'AMANGAKNIH.ID',
+    description: 'A real-time website security analysis and phishing detection tool for Indonesia. Built with Laravel 12, React, and Inertia.js.',
     tags: ['TypeScript', 'Education', 'Network'],
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=800&fit=crop&q=80',
-    repo: 'https://github.com/itzcaesar/virtual-lab-sisjarkom',
+    repo: 'https://github.com/itzcaesar/aman-gak-nih',
   },
 ];
 
