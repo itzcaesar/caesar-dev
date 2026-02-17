@@ -6,6 +6,8 @@ export const translations = {
       projects: 'projects',
       skills: 'skills',
       contact: 'contact',
+      backToPortfolio: 'BACK TO PORTFOLIO',
+      home: 'HOME',
     },
     hero: {
       bootSequence: '// SYSTEM_BOOT_SEQUENCE',
@@ -43,6 +45,8 @@ export const translations = {
       examine: 'EXAMINE',
       repository: 'REPOSITORY',
       liveDemo: 'LIVE DEMO',
+      viewAllWorks: 'VIEW ALL WORKS',
+      selectedWorks: 'SELECTED WORKS',
     },
     skills: {
       title: 'Capabilities',
@@ -62,6 +66,50 @@ export const translations = {
       localTime: 'Local Time',
       footer: 'M. Caesar Rifqi © 2025',
     },
+    metadata: {
+      main: {
+        title: 'Muhammad Caesar Rifqi | Software Engineer & Game Developer',
+        description: 'Portfolio of Muhammad Caesar Rifqi - Software Engineer and Game Developer creating robust digital systems and immersive interactive worlds. Specializing in Full Stack Development and Unity game development.',
+      },
+      works: {
+        title: 'Selected Works - Muhammad Caesar Rifqi',
+        description: 'Comprehensive showcase of professional experience, projects, and ongoing work by Muhammad Caesar Rifqi. Explore work experiences, completed projects, and current developments.',
+      },
+    },
+    works: {
+      hero: {
+        title: 'SELECTED WORKS',
+        subtitle: 'A comprehensive showcase of professional experience, projects, and ongoing work',
+        breadcrumb: {
+          home: 'HOME',
+          works: 'SELECTED WORKS',
+        },
+      },
+      experience: {
+        title: 'WORK EXPERIENCE',
+        present: 'PRESENT',
+        responsibilities: 'KEY RESPONSIBILITIES',
+        noData: 'No work experience to display',
+      },
+      allProjects: {
+        title: 'ALL PROJECTS',
+        subtitle: 'Complete portfolio of completed projects',
+        noData: 'NO PROJECTS TO DISPLAY',
+      },
+      currentWork: {
+        title: 'CURRENT WORK',
+        subtitle: 'Projects in progress and upcoming work',
+        status: {
+          inProgress: 'IN PROGRESS',
+          planning: 'PLANNING',
+          onHold: 'ON HOLD',
+        },
+        progress: 'PROGRESS',
+        lastUpdated: 'LAST UPDATED',
+        expectedCompletion: 'EXPECTED COMPLETION',
+        noData: 'NO CURRENT PROJECTS',
+      },
+    },
   },
   id: {
     nav: {
@@ -70,6 +118,8 @@ export const translations = {
       projects: 'proyek',
       skills: 'keahlian',
       contact: 'kontak',
+      backToPortfolio: 'KEMBALI KE PORTOFOLIO',
+      home: 'BERANDA',
     },
     hero: {
       bootSequence: '// URUTAN_BOOT_SISTEM',
@@ -107,6 +157,8 @@ export const translations = {
       examine: 'PERIKSA',
       repository: 'REPOSITORI',
       liveDemo: 'DEMO LANGSUNG',
+      viewAllWorks: 'LIHAT SEMUA KARYA',
+      selectedWorks: 'KARYA TERPILIH',
     },
     skills: {
       title: 'Kemampuan',
@@ -125,6 +177,50 @@ export const translations = {
       system: 'Sistem',
       localTime: 'Waktu Lokal',
       footer: 'M. Caesar Rifqi © 2025',
+    },
+    metadata: {
+      main: {
+        title: 'Muhammad Caesar Rifqi | Rekayasa Perangkat Lunak & Pengembang Game',
+        description: 'Portofolio Muhammad Caesar Rifqi - Rekayasa Perangkat Lunak dan Pengembang Game yang menciptakan sistem digital yang kuat dan dunia interaktif yang imersif. Spesialisasi dalam Full Stack Development dan pengembangan game Unity.',
+      },
+      works: {
+        title: 'Karya Terpilih - Muhammad Caesar Rifqi',
+        description: 'Tampilan komprehensif pengalaman profesional, proyek, dan pekerjaan yang sedang berlangsung oleh Muhammad Caesar Rifqi. Jelajahi pengalaman kerja, proyek yang telah diselesaikan, dan pengembangan saat ini.',
+      },
+    },
+    works: {
+      hero: {
+        title: 'KARYA TERPILIH',
+        subtitle: 'Tampilan komprehensif pengalaman profesional, proyek, dan pekerjaan yang sedang berlangsung',
+        breadcrumb: {
+          home: 'BERANDA',
+          works: 'KARYA TERPILIH',
+        },
+      },
+      experience: {
+        title: 'PENGALAMAN KERJA',
+        present: 'SEKARANG',
+        responsibilities: 'TANGGUNG JAWAB UTAMA',
+        noData: 'Tidak ada pengalaman kerja untuk ditampilkan',
+      },
+      allProjects: {
+        title: 'SEMUA PROYEK',
+        subtitle: 'Portofolio lengkap proyek yang telah diselesaikan',
+        noData: 'TIDAK ADA PROYEK UNTUK DITAMPILKAN',
+      },
+      currentWork: {
+        title: 'PEKERJAAN SAAT INI',
+        subtitle: 'Proyek yang sedang berlangsung dan pekerjaan mendatang',
+        status: {
+          inProgress: 'SEDANG BERLANGSUNG',
+          planning: 'PERENCANAAN',
+          onHold: 'DITUNDA',
+        },
+        progress: 'PROGRES',
+        lastUpdated: 'TERAKHIR DIPERBARUI',
+        expectedCompletion: 'PERKIRAAN SELESAI',
+        noData: 'TIDAK ADA PROYEK SAAT INI',
+      },
     },
   },
 };

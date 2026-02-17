@@ -1,14 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SectionId } from '../../types';
 import { useApp } from '../../contexts/AppContext';
 import { useSound } from '../../contexts/AudioContext';
 import { translations } from '../../locales/translations';
-import { Globe, Volume2, VolumeX } from 'lucide-react';
+import { Globe, Volume2, VolumeX, Home } from 'lucide-react';
 
 interface NavigationProps {
-  activeSection: SectionId;
-  setActiveSection: (id: SectionId) => void;
+  activeSection?: SectionId;
+  setActiveSection?: (id: SectionId) => void;
 }
 
 const navItems: SectionId[] = ['hero', 'about', 'projects', 'skills', 'contact'];
@@ -16,7 +17,13 @@ const navItems: SectionId[] = ['hero', 'about', 'projects', 'skills', 'contact']
 const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection }) => {
   const { language, toggleLanguage } = useApp();
   const { playSound, isMuted, toggleMute } = useSound();
+  const location = useLocation();
+  const navigate = useNavigate();
   const t = translations[language];
+
+  // Determine mode based on current location
+  const isWorksPage = location.pathname === '/works';
+  const navMode = isWorksPage ? 'page' : 'section';
 
   return (
     <div className="fixed top-0 left-0 w-full z-40 pointer-events-none flex justify-center pt-8 px-6">
@@ -45,28 +52,48 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
 
         {/* Center: Nav - Floating Island Style */}
         <nav className="hidden md:flex backdrop-blur border bg-sw-black/80 border-white/20 px-6 py-3 items-center gap-8 mx-auto">
-          {navItems.map((item, index) => (
+          {navMode === 'section' ? (
+            // Section mode: Display section navigation links
+            <>
+              {navItems.map((item, index) => (
+                <button
+                  key={item}
+                  onMouseEnter={() => playSound('hover')}
+                  onClick={() => {
+                    playSound('click');
+                    setActiveSection?.(item);
+                    document.getElementById(item)?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="group relative flex flex-col items-center"
+                >
+                  <span className={`text-[10px] font-mono mb-1 transition-colors ${activeSection === item ? 'text-sw-accent' : 'text-gray-600'}`}>
+                    0{index + 1}
+                  </span>
+                  <span className={`text-xs uppercase font-bold tracking-wider transition-colors ${activeSection === item ? 'text-white' : 'text-gray-500 group-hover:text-white'}`}>
+                    {t.nav[item]}
+                  </span>
+
+                  {/* Active Dot */}
+                  <div className={`absolute -bottom-1 w-1 h-1 bg-sw-accent transition-all duration-300 ${activeSection === item ? 'opacity-100' : 'opacity-0'}`} />
+                </button>
+              ))}
+            </>
+          ) : (
+            // Page mode: Display "Back to Portfolio" link
             <button
-              key={item}
               onMouseEnter={() => playSound('hover')}
               onClick={() => {
                 playSound('click');
-                setActiveSection(item);
-                document.getElementById(item)?.scrollIntoView({ behavior: 'smooth' });
+                navigate('/');
               }}
-              className="group relative flex flex-col items-center"
+              className="group flex items-center gap-2"
             >
-              <span className={`text-[10px] font-mono mb-1 transition-colors ${activeSection === item ? 'text-sw-accent' : 'text-gray-600'}`}>
-                0{index + 1}
+              <Home size={16} className="transition-colors text-gray-400 group-hover:text-sw-accent" />
+              <span className="text-xs uppercase font-bold tracking-wider transition-colors text-gray-500 group-hover:text-white">
+                {t.nav.backToPortfolio}
               </span>
-              <span className={`text-xs uppercase font-bold tracking-wider transition-colors ${activeSection === item ? 'text-white' : 'text-gray-500 group-hover:text-white'}`}>
-                {t.nav[item]}
-              </span>
-
-              {/* Active Dot */}
-              <div className={`absolute -bottom-1 w-1 h-1 bg-sw-accent transition-all duration-300 ${activeSection === item ? 'opacity-100' : 'opacity-0'}`} />
             </button>
-          ))}
+          )}
 
           {/* Divider */}
           <div className="w-px h-8 bg-white/10"></div>

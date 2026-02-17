@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { PROJECTS } from '../../constants';
-import { ArrowUpRight, Github, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, Github, ExternalLink, ArrowRight } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import { useSound } from '../../contexts/AudioContext';
 import { translations } from '../../locales/translations';
@@ -111,6 +112,7 @@ const Projects: React.FC = () => {
   const [selectedRepo, setSelectedRepo] = useState<{ url: string; title: string } | null>(null);
   const { language } = useApp();
   const { playSound } = useSound();
+  const navigate = useNavigate();
   const t = translations[language].projects;
 
   return (
@@ -204,6 +206,23 @@ const Projects: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* View All Works Button */}
+        <div className="mt-16 flex justify-center">
+          <button
+            onClick={() => {
+              playSound('click');
+              navigate('/works');
+            }}
+            onMouseEnter={() => playSound('hover')}
+            className="group border border-white/20 px-8 py-4 hover:border-sw-accent transition-colors duration-300 flex items-center gap-3"
+          >
+            <span className="text-sm uppercase tracking-wider font-mono text-white group-hover:text-sw-accent transition-colors">
+              {t.viewAllWorks}
+            </span>
+            <ArrowRight className="text-white group-hover:text-sw-accent group-hover:translate-x-1 transition-all duration-300" size={20} />
+          </button>
         </div>
       </div>
     </section>

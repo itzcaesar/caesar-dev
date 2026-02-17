@@ -9,7 +9,7 @@ interface Props {
 
 export const RevealOnScroll = ({ children, width = "fit-content", delay = 0.25 }: Props) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const mainControls = useAnimation();
 
   useEffect(() => {
@@ -22,12 +22,12 @@ export const RevealOnScroll = ({ children, width = "fit-content", delay = 0.25 }
     <div ref={ref} style={{ position: "relative", width, overflow: "hidden" }}>
       <motion.div
         variants={{
-          hidden: { opacity: 0, y: 75 },
+          hidden: { opacity: 0, y: 50 },
           visible: { opacity: 1, y: 0 },
         }}
         initial="hidden"
         animate={mainControls}
-        transition={{ duration: 0.5, delay: delay }}
+        transition={{ duration: 0.6, delay: delay, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}
       </motion.div>
