@@ -4,6 +4,8 @@ export interface Project {
   description: string;
   tags: string[];
   imageUrl: string;
+  imageFile?: string; // Local image file path as alternative
+  images?: string[]; // Array of additional images for carousel
   link?: string;
   repo?: string;
 }

@@ -64,17 +64,6 @@ const Contact: React.FC = () => {
               <li><a href="#" className="text-sm font-bold hover:text-sw-accent uppercase transition-colors">Instagram</a></li>
             </ul>
           </div>
-          <div>
-            <h5 className="font-mono text-[10px] text-gray-500 mb-4 uppercase tracking-widest">{t.system}</h5>
-            <p className="text-sm font-mono text-gray-400">REACT / TYPESCRIPT / TAILWIND</p>
-          </div>
-          <div className="md:col-span-2">
-            <div className="grid grid-cols-3 gap-4 font-mono text-xs">
-              <SystemMetric label="LATENCY" value={`${Math.floor(Math.random() * 20 + 10)}ms`} />
-              <SystemMetric label="CPU" bar />
-              <SystemMetric label="MEM" bar />
-            </div>
-          </div>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">

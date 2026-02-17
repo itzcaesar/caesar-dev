@@ -97,7 +97,7 @@ export const translations = {
         noData: 'NO PROJECTS TO DISPLAY',
       },
       currentWork: {
-        title: 'CURRENT WORK',
+        title: 'CURRENT PROJECTS',
         subtitle: 'Projects in progress and upcoming work',
         status: {
           inProgress: 'IN PROGRESS',

@@ -5,8 +5,14 @@ export const PROJECTS: Project[] = [
     id: '001',
     title: 'AL-Store Landing Page',
     description: 'A landing page tailored for a hosting company with PayloadCMS and WeMX Integration and data sync such as discount, coupons and announcement.',
-    tags: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'NextJS', 'PayloadCMS'],
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&h=800&fit=crop&q=80',
+    tags: ['React', 'TypeScript', 'PostgreSQL', 'NextJS', 'PayloadCMS'],
+    imageUrl: '-',
+    imageFile: '/media/projects/alstore/alstore-hosting.png',
+    images: [
+      '/media/projects/alstore/alstore-hosting.png',
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&h=800&fit=crop&q=80'
+    ],
     repo: 'https://alstoredev.my.id',
   },
   {
@@ -19,14 +25,6 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '003',
-    title: 'GOOGLEFORM-AUTOFILL',
-    description: 'A simple Python tool to automatically fill and submit Google Forms with either random or custom data. Supports multi-page forms, batch submissions, custom values via JSON, dry-run mode.',
-    tags: ['Python', 'Automation', 'Tools'],
-    imageUrl: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&h=800&fit=crop&q=80',
-    repo: 'https://github.com/itzcaesar/googleform-autofill',
-  },
-  {
-    id: '004',
     title: 'AMANGAKNIH.ID',
     description: 'A real-time website security analysis and phishing detection tool for Indonesia. Built with Laravel 12, React, and Inertia.js.',
     tags: ['TypeScript', 'Education', 'Network'],
@@ -78,39 +76,4 @@ export const WORK_EXPERIENCES: WorkExperience[] = [
   }
 ];
 
-export const CURRENT_PROJECTS: CurrentProject[] = [
-  {
-    id: 'current-001',
-    title: 'AI-Powered Task Manager',
-    description: 'Building an intelligent task management system with AI-driven prioritization, natural language processing for task creation, and smart scheduling recommendations.',
-    tags: ['React', 'TypeScript', 'OpenAI', 'Node.js'],
-    imageUrl: 'https://picsum.photos/1200/800?grayscale&random=10',
-    status: 'in-progress',
-    progress: 65,
-    lastUpdated: '2024-01-15',
-    expectedCompletion: 'Q2 2024',
-    repo: 'https://github.com/itzcaesar/ai-task-manager'
-  },
-  {
-    id: 'current-002',
-    title: 'VR Training Simulator',
-    description: 'Developing a virtual reality training platform for industrial safety procedures using Unreal Engine 5 with realistic physics and interactive scenarios.',
-    tags: ['Unreal Engine 5', 'C++', 'VR', 'Blueprint'],
-    imageUrl: 'https://picsum.photos/1200/800?grayscale&random=11',
-    status: 'planning',
-    progress: 25,
-    expectedCompletion: 'Q3 2024',
-    // No lastUpdated or repo to test conditional rendering
-  },
-  {
-    id: 'current-003',
-    title: 'Open Source UI Library',
-    description: 'Creating a comprehensive React component library with accessibility-first design, dark mode support, and extensive customization options.',
-    tags: ['React', 'TypeScript', 'Tailwind', 'Storybook'],
-    imageUrl: 'https://picsum.photos/1200/800?grayscale&random=12',
-    status: 'on-hold',
-    lastUpdated: '2023-12-20',
-    repo: 'https://github.com/itzcaesar/ui-library',
-    // No progress or expectedCompletion to test conditional rendering
-  }
-];
+export const CURRENT_PROJECTS: CurrentProject[] = [];

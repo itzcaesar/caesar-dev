@@ -110,11 +110,18 @@ const CurrentWork: React.FC = () => {
                       </div>
                     ) : (
                       <img
-                        src={project.imageUrl}
+                        src={project.imageFile || project.imageUrl}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         loading="lazy"
-                        onError={() => handleImageError(project.id)}
+                        onError={(e) => {
+                          // If imageFile fails and we have imageUrl as fallback, try it
+                          if (project.imageFile && project.imageUrl && e.currentTarget.src !== project.imageUrl) {
+                            e.currentTarget.src = project.imageUrl;
+                          } else {
+                            handleImageError(project.id);
+                          }
+                        }}
                       />
                     )}
                     {/* Overlay on hover */}
