@@ -2,57 +2,98 @@ import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const CustomCursor: React.FC = () => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [hoverText, setHoverText] = useState('');
-  
+
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // Rigid, mechanical movement
   const springConfig = { damping: 20, stiffness: 300, mass: 0.1 };
   const springX = useSpring(mouseX, springConfig);
   const springY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const applyMode = () => setIsEnabled(mediaQuery.matches);
+
+    applyMode();
+    mediaQuery.addEventListener('change', applyMode);
+
+    return () => {
+      mediaQuery.removeEventListener('change', applyMode);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isEnabled) {
+      setIsVisible(false);
+      setIsHovering(false);
+      setHoverText('');
+      return;
+    }
+
+    const interactiveSelector = 'a, button, [role="button"], input, textarea, select, [data-cursor-text]';
+
     const moveCursor = (e: MouseEvent) => {
+      setIsVisible(true);
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-      
-      const target = e.target as HTMLElement;
-      
-      const dataText = target.getAttribute('data-cursor-text');
+
+      const target = e.target as HTMLElement | null;
+      if (!target) {
+        setIsHovering(false);
+        setHoverText('');
+        return;
+      }
+
+      const hoverTarget = target.closest(interactiveSelector) as HTMLElement | null;
+      const dataText = hoverTarget?.getAttribute('data-cursor-text')?.trim();
+
       if (dataText) {
-        setHoverText(dataText);
         setIsHovering(true);
+        setHoverText(dataText);
       } else {
-        const isClickable = 
-          target.tagName.toLowerCase() === 'a' ||
-          target.tagName.toLowerCase() === 'button' ||
-          target.closest('a') ||
-          target.closest('button');
-        
+        const isClickable = Boolean(hoverTarget);
         setIsHovering(!!isClickable);
-        setHoverText(isClickable ? '' : '');
+        setHoverText('');
       }
     };
 
+    const hideCursor = () => {
+      setIsVisible(false);
+      setIsHovering(false);
+      setHoverText('');
+    };
+
     window.addEventListener('mousemove', moveCursor);
-    return () => window.removeEventListener('mousemove', moveCursor);
-  }, [mouseX, mouseY]);
+    window.addEventListener('mouseout', hideCursor);
+    window.addEventListener('blur', hideCursor);
+
+    return () => {
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mouseout', hideCursor);
+      window.removeEventListener('blur', hideCursor);
+    };
+  }, [isEnabled, mouseX, mouseY]);
+
+  if (!isEnabled) {
+    return null;
+  }
 
   return (
     <>
-      {/* Crosshair Center */}
       <motion.div 
-        className="fixed top-0 left-0 pointer-events-none z-[10000] mix-blend-exclusion"
+        className="fixed top-0 left-0 pointer-events-none z-[10000]"
         style={{ x: mouseX, y: mouseY, translateX: '-50%', translateY: '-50%' }}
+        animate={{ opacity: isVisible ? 1 : 0 }}
       >
         <div className="w-1 h-1 bg-sw-accent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-px bg-white/50" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-8 bg-white/50" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-px bg-white/70" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-8 bg-white/70" />
       </motion.div>
-      
-      {/* Target Box */}
+
       <motion.div 
         className="fixed top-0 left-0 pointer-events-none z-[9999] border border-sw-accent flex items-center justify-center"
         style={{ 
@@ -61,21 +102,20 @@ const CustomCursor: React.FC = () => {
           translateX: '-50%', 
           translateY: '-50%'
         }}
+        initial={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
         animate={{
           width: isHovering ? 40 : 20,
           height: isHovering ? 40 : 20,
-          opacity: 1,
-          backgroundColor: isHovering ? 'rgba(204, 255, 0, 0.1)' : 'transparent',
+          opacity: isVisible ? 1 : 0,
+          backgroundColor: isHovering ? 'rgba(204, 255, 0, 0.1)' : 'rgba(0, 0, 0, 0)',
         }}
         transition={{ duration: 0.15 }}
-      >
-      </motion.div>
+      />
 
-      {/* Label */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[10000] ml-6 mt-6"
         style={{ x: springX, y: springY }}
-        animate={{ opacity: hoverText ? 1 : 0 }}
+        animate={{ opacity: hoverText && isVisible ? 1 : 0 }}
       >
         <span className="bg-sw-accent text-sw-black text-[10px] font-mono font-bold px-2 py-1 uppercase">
           {hoverText}

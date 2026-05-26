@@ -1,81 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { useApp } from '../../contexts/AppContext';
-import { translations } from '../../locales/translations';
+import React from 'react';
 
-const SystemMetric: React.FC<{ label: string; value?: string; bar?: boolean }> = ({ label, value, bar }) => {
-  const [metric, setMetric] = useState(0);
+import type { HomePageContent, SiteSettings } from '@/types';
 
-  useEffect(() => {
-    if (!bar) return;
-    const interval = setInterval(() => {
-      setMetric(Math.floor(Math.random() * 30 + 40));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [bar]);
-
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="flex justify-between text-gray-500">
-        <span>{label}</span>
-        <span>{value || `${metric}%`}</span>
-      </div>
-      {bar && (
-        <div className="h-1 bg-white/10 w-full overflow-hidden">
-          <div
-            className="h-full bg-sw-accent transition-all duration-1000 ease-in-out"
-            style={{ width: `${metric}%` }}
-          />
-        </div>
-      )}
-    </div>
-  );
+type ContactProps = {
+  content: HomePageContent['contact'];
+  siteSettings: SiteSettings;
 };
 
-const Contact: React.FC = () => {
-  const { language } = useApp();
-  const t = translations[language].contact;
-
+const Contact: React.FC<ContactProps> = ({ content, siteSettings }) => {
   return (
-    <section id="contact" className="min-h-[80vh] flex flex-col justify-between py-20 px-6 bg-sw-black relative border-t border-white/10">
+    <section id="contact" className="py-20 md:py-24 px-6 bg-sw-black relative border-t border-white/10">
+      <div className="max-w-[1400px] mx-auto w-full">
+        <p className="font-mono text-sw-accent text-xs mb-5 uppercase tracking-widest">{content.subtitle}</p>
 
-      <div className="max-w-[1400px] mx-auto w-full flex-grow flex flex-col justify-center">
-        <p className="font-mono text-sw-accent text-xs mb-8 uppercase tracking-widest">// {t.subtitle}</p>
-
-        <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 max-w-3xl">
-          {t.heading}
+        <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 max-w-4xl uppercase leading-tight">
+          {content.heading}
         </h2>
 
         <a
-          href="mailto:muhammadcaesarrifqi@gmail.com"
-          className="group relative inline-flex items-center gap-4 text-[4vw] font-bold leading-none uppercase tracking-tighter text-gray-500 hover:text-white transition-colors self-start"
-          data-cursor-text={t.sendMail}
+          href={`mailto:${content.email}`}
+          className="group relative inline-flex max-w-full items-center gap-3 break-all text-2xl sm:text-4xl lg:text-6xl font-bold leading-none uppercase tracking-tight text-gray-500 hover:text-white transition-colors"
+          data-cursor-text={content.sendMailCursorLabel}
         >
-          <span>{t.sendEmail}</span>
-          <span className="w-4 h-4 bg-sw-accent rounded-full group-hover:animate-ping" />
+          <span>{content.sendEmailLabel}</span>
+          <span className="h-3 w-3 flex-shrink-0 bg-sw-accent group-hover:animate-ping" />
         </a>
-      </div>
 
-      <div className="max-w-[1400px] mx-auto w-full border-t border-white/10 pt-8 mt-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          <div>
-            <h5 className="font-mono text-[10px] text-gray-500 mb-4 uppercase tracking-widest">{t.connect}</h5>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-sm font-bold hover:text-sw-accent uppercase transition-colors">Github</a></li>
-              <li><a href="#" className="text-sm font-bold hover:text-sw-accent uppercase transition-colors">Instagram</a></li>
+        <div className="mt-12 grid gap-px bg-white/10 border border-white/10 md:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="bg-sw-black p-5">
+            <h5 className="font-mono text-[10px] text-gray-500 mb-4 uppercase tracking-widest">{content.connectLabel}</h5>
+            <ul className="flex flex-wrap gap-2">
+              {siteSettings.socials.map((social) => (
+                <li key={`${social.platform}-${social.url}`}>
+                  <a
+                    href={social.url}
+                    className="inline-flex min-h-10 items-center border border-white/10 px-3 font-mono text-xs uppercase text-gray-300 transition-colors hover:border-sw-accent hover:text-sw-accent"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {social.platform}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-        </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
-          <p className="font-mono text-[10px] text-gray-500 uppercase tracking-widest">
-            {t.footer}
-          </p>
-          <p className="text-[10px] font-mono text-sw-accent">
-            {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}
-          </p>
+          <div className="bg-sw-black p-5 font-mono text-[10px] uppercase tracking-widest text-gray-500 md:min-w-64">
+            <p>{content.footer}</p>
+            <p className="mt-2 text-sw-accent">
+              {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}
+            </p>
+          </div>
         </div>
       </div>
-
     </section>
   );
 };

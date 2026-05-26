@@ -1,20 +1,36 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useApp } from '../../contexts/AppContext';
-import { useSound } from '../../contexts/AudioContext';
-import { translations } from '../../locales/translations';
+import { ExternalLink, FileText, Github, Instagram, Linkedin, Mail, Twitter } from 'lucide-react';
 
-import { DecryptText } from '../UI/DecryptText';
+import { DecryptText } from '@/components/UI/DecryptText';
+import type { HomePageContent, SiteSettings } from '@/types';
 
-const Hero: React.FC = () => {
-  const { language } = useApp();
-  const { playSound } = useSound();
-  const t = translations[language].hero;
+const socialIcons = {
+  external: ExternalLink,
+  github: Github,
+  instagram: Instagram,
+  linkedin: Linkedin,
+  mail: Mail,
+  twitter: Twitter,
+};
+
+type HeroProps = {
+  content: HomePageContent['hero'];
+  siteSettings: SiteSettings;
+};
+
+function splitFirstWord(value: string) {
+  const [first = '', ...rest] = value.split(' ');
+  return { first, rest: rest.join(' ') };
+}
+
+const Hero: React.FC<HeroProps> = ({ content, siteSettings }) => {
+  const primaryRole = splitFirstWord(content.primaryRole);
+  const secondaryRole = splitFirstWord(content.secondaryRole);
 
   return (
-    <section id="hero" className="relative h-screen flex flex-col justify-center px-6 overflow-hidden">
+    <section id="hero" className="relative min-h-[88svh] flex flex-col justify-center px-6 pt-24 md:pt-28 pb-10 overflow-hidden">
       <div className="w-full max-w-[1400px] mx-auto z-10 grid grid-cols-12 gap-4">
-        {/* Decorative Grid Lines */}
         <div className="col-span-1 border-r h-32 hidden lg:block border-white/10"></div>
         <div className="col-span-11 relative">
           <motion.div
@@ -22,38 +38,38 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="font-mono text-sw-accent text-xs mb-6 tracking-widest">
-              <DecryptText text={t.bootSequence} speed={30} />
+            <p className="font-mono text-sw-accent text-xs mb-4 tracking-widest">
+              <DecryptText text={content.bootSequence} speed={30} />
             </p>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight uppercase leading-[1.1] mb-8 text-white">
-              <DecryptText text="Muhammad Caesar" speed={50} />
-              <span className="block">Rifqi</span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase leading-[1.02] mb-5 text-white">
+              <DecryptText text={content.firstLineName} speed={50} />
+              <span className="block">{content.secondLineName}</span>
             </h1>
 
-            <div className="flex items-center gap-6 my-4">
+            <div className="flex items-center gap-6 my-3">
               <div className="h-px bg-sw-accent w-12 md:w-32"></div>
-              <span className="font-mono text-xs md:text-sm text-gray-400">{t.role}</span>
+              <span className="font-mono text-xs md:text-sm text-gray-400">{content.roleLabel}</span>
               <div className="h-px bg-sw-accent w-12 md:w-32"></div>
             </div>
 
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter uppercase leading-[0.9]">
-              <span className="text-transparent stroke-text">{t.softwareEngineer.split(' ')[0]}</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter uppercase leading-[0.92]">
+              <span className="text-transparent stroke-text">{primaryRole.first}</span>
               <span className="block text-white">
-                <DecryptText text={t.softwareEngineer.split(' ').slice(1).join(' ')} speed={40} />
+                <DecryptText text={primaryRole.rest} speed={40} />
               </span>
             </h2>
 
             <div className="flex items-center gap-6 my-2">
               <div className="h-px w-12 md:w-32 bg-white/20"></div>
-              <span className="font-mono text-xs md:text-sm text-gray-400">{t.and}</span>
+              <span className="font-mono text-xs md:text-sm text-gray-400">{content.conjunction}</span>
               <div className="h-px w-12 md:w-32 bg-white/20"></div>
             </div>
 
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter uppercase leading-[0.9] text-right">
-              <span className="text-white">{t.gameDeveloper.split(' ')[0]}</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter uppercase leading-[0.9] text-right">
+              <span className="text-white">{secondaryRole.first}</span>
               <span className="block text-sw-accent">
-                <DecryptText text={t.gameDeveloper.split(' ').slice(1).join(' ')} speed={40} />
+                <DecryptText text={secondaryRole.rest} speed={40} />
               </span>
             </h2>
           </motion.div>
@@ -62,64 +78,81 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="mt-16 flex flex-col md:flex-row gap-12 justify-between items-start md:items-end border-t pt-8 border-white/10"
+            className="mt-8 flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-end border-t pt-5 border-white/10"
           >
-            <div className="max-w-md">
-              <p className="font-mono text-xs leading-relaxed uppercase mb-6 text-gray-400">
-                {t.description}
+            <div className="max-w-xl">
+              <p className="font-mono text-xs leading-relaxed uppercase mb-5 text-gray-400">
+                {content.description}
               </p>
 
-              <div className="flex gap-3">
-                <a
-                  href="https://github.com/itzcaesar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border border-white/20 p-2 transition-colors group hover:bg-white hover:text-black"
-                  aria-label="GitHub"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://www.instagram.com/caesarfqi/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border border-white/20 p-2 transition-colors group hover:bg-white hover:text-black"
-                  aria-label="Instagram"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                  </svg>
-                </a>
+              <div className="grid gap-px bg-white/10 border border-white/10 sm:grid-cols-3">
+                {[
+                  ['STATUS', 'ONLINE'],
+                  ['FOCUS', 'WEB/GAME'],
+                  ['SIGNAL', `${siteSettings.socials.length} LINKS`],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-sw-black px-3 py-2 font-mono uppercase">
+                    <span className="block text-[9px] text-gray-600">{label}</span>
+                    <span className="text-[11px] text-sw-accent">{value}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <motion.button
-                whileHover={{ scale: 1.05, x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  playSound('click');
-                  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                onMouseEnter={() => playSound('hover')}
-                className="border border-white/20 px-6 py-3 font-mono text-xs uppercase transition-colors hover:bg-white hover:text-black relative overflow-hidden group"
-                data-cursor-text="VIEW"
-              >
-                <span className="relative z-10">{t.projectsBtn}</span>
-                <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></div>
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05, x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-sw-accent text-black px-6 py-3 font-mono text-xs uppercase relative overflow-hidden group"
-                data-cursor-text="EMAIL"
-              >
-                <span className="relative z-10 group-hover:text-white transition-colors">{t.contactBtn}</span>
-                <div className="absolute inset-0 bg-black transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></div>
-              </motion.button>
+            <div className="flex w-full flex-col gap-4 sm:w-auto">
+              <div className="flex flex-wrap gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.03, x: 3 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
+                    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="border border-white/20 px-5 py-3 font-mono text-xs uppercase transition-colors hover:bg-white hover:text-black relative overflow-hidden group"
+                  data-cursor-text={content.projectsButton}
+                >
+                  <span className="relative z-10">{content.projectsButton}</span>
+                  <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></div>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.03, x: 3 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-sw-accent text-black px-5 py-3 font-mono text-xs uppercase relative overflow-hidden group"
+                  data-cursor-text={content.contactButton}
+                >
+                  <span className="relative z-10 group-hover:text-white transition-colors">{content.contactButton}</span>
+                  <div className="absolute inset-0 bg-black transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></div>
+                </motion.button>
+                <motion.a
+                  href="/cv"
+                  whileHover={{ scale: 1.03, x: 3 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="border border-sw-accent/60 px-5 py-3 font-mono text-xs uppercase text-sw-accent transition-colors hover:bg-sw-accent hover:text-black relative overflow-hidden group inline-flex items-center gap-2"
+                  data-cursor-text="VIEW CV"
+                >
+                  <FileText className="relative z-10 h-4 w-4" />
+                  <span className="relative z-10">(C) CV</span>
+                </motion.a>
+              </div>
+
+              <div className="flex gap-2 lg:justify-end">
+                {siteSettings.socials.map((social) => {
+                  const Icon = socialIcons[social.icon as keyof typeof socialIcons] || ExternalLink;
+
+                  return (
+                    <a
+                      key={`${social.platform}-${social.url}`}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border border-white/20 p-2 transition-colors group hover:bg-white hover:text-black"
+                      aria-label={social.platform}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         </div>

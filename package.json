@@ -4,22 +4,34 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "db:down": "docker compose down",
+    "db:up": "docker compose up -d postgres",
+    "build": "next build",
+    "dev": "next dev",
+    "payload": "payload",
+    "payload:generate-types": "payload generate:types",
+    "payload:migrate": "payload migrate",
+    "payload:migrate:create": "payload migrate:create",
+    "seed": "payload run scripts/seed.ts",
+    "start": "next start"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "^3.84.1",
+    "@payloadcms/next": "^3.84.1",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",
+    "next": "^16.2.6",
+    "payload": "^3.84.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^7.13.0"
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "@types/react": "19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~5.8.2"
   }
 }

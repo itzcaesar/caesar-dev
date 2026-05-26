@@ -1,6 +1,6 @@
 # M. Caesar Rifqi - Portfolio
 
-A modern, interactive portfolio website showcasing my work as a Software Engineer and Game Developer. Built with React, TypeScript, and Tailwind CSS.
+A modern, interactive portfolio website showcasing my work as a Software Engineer and Game Developer. Built with Next.js, React, TypeScript, Tailwind CSS, and Payload CMS.
 
 ## 🌟 Features
 
@@ -12,22 +12,26 @@ A modern, interactive portfolio website showcasing my work as a Software Enginee
 - **Project Showcase**: Display of real GitHub projects with live links
 - **Collapsible Skills**: Organized skills by category (Game Development & Full Stack)
 - **Smooth Scrolling**: Navigation with smooth scroll behavior
+- **Payload CMS**: Manage all visible site content from `/admin`
 
 ## 🛠️ Tech Stack
 
 - **React 19** - UI library
 - **TypeScript** - Type safety
-- **Vite** - Build tool & dev server
+- **Next.js** - React framework and app router
 - **Tailwind CSS** - Utility-first styling
 - **Framer Motion** - Animation library
 - **Lucide React** - Icon library
+- **Payload CMS** - Content management
+- **Postgres** - Dockerized CMS database
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20.9 or higher)
 - npm or yarn
+- Docker Desktop
 
 ### Installation
 
@@ -42,16 +46,48 @@ cd caesar-dev
 npm install
 ```
 
-3. Start the development server:
+3. Configure environment variables:
+```bash
+cp .env.example .env
+```
+
+Set `PAYLOAD_SECRET` to a long random string before production.
+
+4. Start Postgres:
+```bash
+npm run db:up
+```
+
+The local Postgres container maps to `localhost:5433` because `5432` is commonly already occupied on Windows development machines.
+
+5. Seed the CMS with the current portfolio content:
+```bash
+npm run seed
+```
+
+6. Start the development server:
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:3000`
+7. Open your browser and navigate to `http://localhost:3000`
+
+8. Open `http://localhost:3000/admin` to create or manage the Payload user and content.
 
 ## 📁 Project Structure
 
 ```
+├── app/
+│   ├── (frontend)/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── works/
+│   │       └── page.tsx
+│   ├── (payload)/
+│   │   ├── admin/
+│   │   ├── api/
+│   │   └── layout.tsx
+│   ├── globals.css
 ├── components/
 │   ├── Layout/
 │   │   ├── CustomCursor.tsx
@@ -67,11 +103,19 @@ npm run dev
 │       └── Skills.tsx
 ├── contexts/
 │   └── AppContext.tsx
-├── locales/
-│   └── translations.ts
-├── constants.ts
-├── types.ts
-└── App.tsx
+├── docker-compose.yml
+├── migrations/
+├── public/
+│   └── media/
+├── lib/
+│   └── portfolio-data.ts
+├── views/
+│   ├── MainPage.tsx
+│   └── WorksPage.tsx
+├── payload.config.ts
+├── scripts/
+│   └── seed.ts
+└── types.ts
 ```
 
 ## 🌐 Sections
@@ -86,23 +130,50 @@ npm run dev
 
 ### Colors
 
-The color scheme is defined in `index.html` using Tailwind config:
+The color scheme is defined in `tailwind.config.ts`:
 
 - **Black**: `#050505` - Deep black background
 - **Accent**: `#ccff00` - Acid lime for highlights
 - **White**: `#ffffff` - Text color
 
-### Translations
+### Site Copy
 
-Add or modify translations in `locales/translations.ts` for both English and Indonesian.
+Manage localized site copy, metadata, navigation, footer, social links, and UI labels in Payload globals.
 
 ### Projects
 
-Update your projects in `constants.ts` in the `PROJECTS` array.
+Manage projects in Payload under `Projects`.
 
 ### Skills
 
-Modify skills in `constants.ts` in the `SKILLS` array.
+Manage skills in Payload under `Skills`.
+
+### Work Experience
+
+Manage experience entries in Payload under `Work Experiences`. Use the `order` field to control display order when data comes from the CMS.
+
+### Database
+
+Start and stop the local database:
+
+```bash
+npm run db:up
+npm run db:down
+```
+
+Run migrations:
+
+```bash
+npm run payload:migrate
+```
+
+### Payload Types
+
+Regenerate Payload types after schema changes:
+
+```bash
+npm run payload:generate-types
+```
 
 ## 📦 Build
 
@@ -112,7 +183,7 @@ To create a production build:
 npm run build
 ```
 
-The built files will be in the `dist/` directory.
+Next.js writes production build output to the `.next/` directory.
 
 ## 📄 License
 

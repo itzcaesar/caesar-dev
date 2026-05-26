@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSound } from '../../contexts/AudioContext';
 
 const bootLogs = [
     "INITIALIZING_KERNEL...",
@@ -16,7 +15,6 @@ const bootLogs = [
 export const BootSequence: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
     const [logs, setLogs] = useState<string[]>([]);
     const [progress, setProgress] = useState(0);
-    const { playSound } = useSound();
 
     useEffect(() => {
         // Prevent scrolling during boot
@@ -29,7 +27,6 @@ export const BootSequence: React.FC<{ onComplete: () => void }> = ({ onComplete 
         bootLogs.forEach((log, index) => {
             setTimeout(() => {
                 setLogs(prev => [...prev, log]);
-                playSound('click'); // Mechanical click for each log
             }, index * 500);
         });
 
@@ -46,7 +43,6 @@ export const BootSequence: React.FC<{ onComplete: () => void }> = ({ onComplete 
 
         // Completion
         const completeTimeout = setTimeout(() => {
-            playSound('access');
             document.body.style.overflow = 'unset';
             onComplete();
         }, totalTime + 500);
@@ -56,7 +52,7 @@ export const BootSequence: React.FC<{ onComplete: () => void }> = ({ onComplete 
             clearInterval(progressInterval);
             document.body.style.overflow = 'unset';
         };
-    }, [onComplete, playSound]);
+    }, [onComplete]);
 
     return (
         <motion.div

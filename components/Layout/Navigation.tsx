@@ -1,29 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { SectionId } from '../../types';
-import { useApp } from '../../contexts/AppContext';
-import { useSound } from '../../contexts/AudioContext';
-import { translations } from '../../locales/translations';
-import { Globe, Volume2, VolumeX, Home } from 'lucide-react';
+import { Globe, Home } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+
+import { useApp } from '@/contexts/AppContext';
+import type { SectionId, SiteSettings } from '@/types';
 
 interface NavigationProps {
   activeSection?: SectionId;
   setActiveSection?: (id: SectionId) => void;
+  siteSettings: SiteSettings;
 }
 
-const navItems: SectionId[] = ['hero', 'about', 'projects', 'skills', 'contact'];
-
-const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection }) => {
+const Navigation: React.FC<NavigationProps> = ({
+  activeSection,
+  setActiveSection,
+  siteSettings,
+}) => {
   const { language, toggleLanguage } = useApp();
-  const { playSound, isMuted, toggleMute } = useSound();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const t = translations[language];
-
-  // Determine mode based on current location
-  const isWorksPage = location.pathname === '/works';
-  const navMode = isWorksPage ? 'page' : 'section';
+  const pathname = usePathname();
+  const router = useRouter();
+  const isWorksPage = pathname === '/works';
+  const languageTitle =
+    language === 'en'
+      ? siteSettings.languageToggleTitles.toIndonesian
+      : siteSettings.languageToggleTitles.toEnglish;
 
   return (
     <div className="fixed top-0 left-0 w-full z-40 pointer-events-none flex justify-center pt-8 px-6">
@@ -33,108 +34,64 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
         transition={{ duration: 0.6, ease: "circOut" }}
         className="pointer-events-auto w-full max-w-[1400px] flex justify-between items-start relative"
       >
-        {/* Mobile Language Toggle - Left Side (formerly Right) or Hidden if we unify */}
-        {/* We can unify the desktop/mobile toggle or keep them separate for positioning */}
-
-        {/* Mobile Language Toggle - Right Side */}
         <div className="absolute right-0 top-0 p-8 md:hidden">
           <button
-            onClick={() => {
-              toggleLanguage();
-              playSound('click');
-            }}
+            onClick={toggleLanguage}
             className="backdrop-blur border bg-sw-black/80 border-white/20 p-3 transition-colors hover:border-sw-accent group"
-            title={language === 'en' ? 'Switch to Indonesian' : 'Switch to English'}
+            title={languageTitle}
           >
             <Globe size={18} className="transition-colors text-gray-400 group-hover:text-sw-accent" />
           </button>
         </div>
 
-        {/* Center: Nav - Floating Island Style */}
         <nav className="hidden md:flex backdrop-blur border bg-sw-black/80 border-white/20 px-6 py-3 items-center gap-8 mx-auto">
-          {navMode === 'section' ? (
-            // Section mode: Display section navigation links
+          {!isWorksPage ? (
             <>
-              {navItems.map((item, index) => (
+              {siteSettings.navItems.map((item, index) => (
                 <button
-                  key={item}
-                  onMouseEnter={() => playSound('hover')}
+                  key={item.sectionId}
                   onClick={() => {
-                    playSound('click');
-                    setActiveSection?.(item);
-                    document.getElementById(item)?.scrollIntoView({ behavior: 'smooth' });
+                    setActiveSection?.(item.sectionId);
+                    document.getElementById(item.sectionId)?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="group relative flex flex-col items-center"
                 >
-                  <span className={`text-[10px] font-mono mb-1 transition-colors ${activeSection === item ? 'text-sw-accent' : 'text-gray-600'}`}>
+                  <span className={`text-[10px] font-mono mb-1 transition-colors ${activeSection === item.sectionId ? 'text-sw-accent' : 'text-gray-600'}`}>
                     0{index + 1}
                   </span>
-                  <span className={`text-xs uppercase font-bold tracking-wider transition-colors ${activeSection === item ? 'text-white' : 'text-gray-500 group-hover:text-white'}`}>
-                    {t.nav[item]}
+                  <span className={`text-xs uppercase font-bold tracking-wider transition-colors ${activeSection === item.sectionId ? 'text-white' : 'text-gray-500 group-hover:text-white'}`}>
+                    {item.label}
                   </span>
 
-                  {/* Active Dot */}
-                  <div className={`absolute -bottom-1 w-1 h-1 bg-sw-accent transition-all duration-300 ${activeSection === item ? 'opacity-100' : 'opacity-0'}`} />
+                  <div className={`absolute -bottom-1 w-1 h-1 bg-sw-accent transition-all duration-300 ${activeSection === item.sectionId ? 'opacity-100' : 'opacity-0'}`} />
                 </button>
               ))}
             </>
           ) : (
-            // Page mode: Display "Back to Portfolio" link
             <button
-              onMouseEnter={() => playSound('hover')}
-              onClick={() => {
-                playSound('click');
-                navigate('/');
-              }}
+              onClick={() => router.push('/')}
               className="group flex items-center gap-2"
             >
               <Home size={16} className="transition-colors text-gray-400 group-hover:text-sw-accent" />
               <span className="text-xs uppercase font-bold tracking-wider transition-colors text-gray-500 group-hover:text-white">
-                {t.nav.backToPortfolio}
+                {siteSettings.backToPortfolioLabel}
               </span>
             </button>
           )}
 
-          {/* Divider */}
           <div className="w-px h-8 bg-white/10"></div>
 
-          {/* Desktop Language Toggle */}
           <button
-            onClick={() => {
-              toggleLanguage();
-              playSound('click');
-            }}
-            onMouseEnter={() => playSound('hover')}
+            onClick={toggleLanguage}
             className="group flex items-center justify-center gap-2 h-8"
-            title={language === 'en' ? 'Switch to Indonesian' : 'Switch to English'}
+            title={languageTitle}
           >
             <Globe size={16} className="transition-colors text-gray-400 group-hover:text-white" />
             <span className="font-mono text-xs text-gray-400 group-hover:text-sw-accent transition-colors">
-              {language === 'en' ? 'EN' : 'ID'}
+              {language === 'en' ? siteSettings.languageLabels.english : siteSettings.languageLabels.indonesian}
             </span>
           </button>
-
-          {/* Divider */}
-          <div className="w-px h-8 bg-white/10"></div>
-
-          {/* Sound Toggle */}
-          <button
-            onClick={() => {
-              toggleMute();
-              playSound('toggle');
-            }}
-            onMouseEnter={() => playSound('hover')}
-            className="group flex items-center justify-center h-8 w-8"
-            title={isMuted ? 'Unmute UI Sounds' : 'Mute UI Sounds'}
-          >
-            {isMuted ? (
-              <VolumeX size={16} className="text-gray-500 group-hover:text-red-500 transition-colors" />
-            ) : (
-              <Volume2 size={16} className="text-gray-400 group-hover:text-sw-accent transition-colors" />
-            )}
-          </button>
         </nav>
-
       </motion.header>
     </div>
   );

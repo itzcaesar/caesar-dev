@@ -1,131 +1,131 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SKILLS } from '../../constants';
-import { useApp } from '../../contexts/AppContext';
-import { translations } from '../../locales/translations';
+import React, { useEffect, useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
+import type { HomePageContent, Skill } from '../../types';
 
-const Skills: React.FC = () => {
-  const { language } = useApp();
-  const t = translations[language].skills;
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['Game Development', 'Full Stack Dev']);
+type SkillsProps = {
+  content: HomePageContent['skillsSection'];
+  skills: Skill[];
+};
 
-  const categories = Array.from(new Set(SKILLS.map(skill => skill.category)));
+const Skills: React.FC<SkillsProps> = ({ content, skills }) => {
+  const categories = useMemo(
+    () => Array.from(new Set(skills.map(skill => skill.category))),
+    [skills]
+  );
 
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
+  const preferredCategory = categories.includes('Full Stack Dev')
+    ? 'Full Stack Dev'
+    : categories[0];
+
+  const [activeCategory, setActiveCategory] = useState<Skill['category'] | undefined>(preferredCategory);
+
+  useEffect(() => {
+    if (!activeCategory || !categories.includes(activeCategory)) {
+      setActiveCategory(preferredCategory);
+    }
+  }, [activeCategory, categories, preferredCategory]);
+
+  const activeSkills = activeCategory
+    ? skills.filter(skill => skill.category === activeCategory)
+    : [];
+
+  const formatSkillName = (name: string) => {
+    return name.replace(/_/g, ' ');
   };
 
   return (
-    <section id="skills" className="py-32 px-6 bg-sw-black border-t border-white/10">
+    <section id="skills" className="py-20 md:py-24 px-6 bg-sw-black border-t border-white/10">
       <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12">
 
         <div className="lg:col-span-3">
           <div className="lg:sticky lg:top-40">
             <span className="inline-block px-3 py-1 border border-sw-accent text-sw-accent font-mono text-xs uppercase mb-4">
-              {t.subtitle}
+              {content.subtitle}
             </span>
-            <p className="text-gray-500 text-xs font-mono max-w-[200px]">
-              {t.system}
+            <h2 className="text-3xl md:text-4xl font-bold uppercase mb-4">
+              {content.title}
+            </h2>
+            <p className="text-gray-500 text-xs font-mono max-w-[240px] leading-relaxed">
+              {content.systemLabel}
             </p>
+            <div className="mt-8 grid grid-cols-2 gap-3 max-w-[240px]">
+              <div className="border border-white/10 px-3 py-2">
+                <span className="block font-mono text-[10px] text-gray-600 uppercase">{content.totalLabel}</span>
+                <span className="font-mono text-lg text-sw-accent">{skills.length}</span>
+              </div>
+              <div className="border border-white/10 px-3 py-2">
+                <span className="block font-mono text-[10px] text-gray-600 uppercase">{content.activeLabel}</span>
+                <span className="font-mono text-lg text-sw-accent">{activeSkills.length}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="lg:col-span-9 space-y-6">
-          {categories.map((category) => {
-            const categorySkills = SKILLS.filter(skill => skill.category === category);
-            const isExpanded = expandedCategories.includes(category);
-            const translatedCategory = category === 'Game Development' ? t.gamedev : t.fullstack;
+        <div className="lg:col-span-9">
+          <div className="border border-white/10 bg-sw-black/80">
+            <div className="flex flex-wrap gap-2 border-b border-white/10 p-3">
+              {categories.map((category) => {
+                const categorySkills = skills.filter(skill => skill.category === category);
+                const isActive = category === activeCategory;
 
-            return (
-              <div key={category} className="border border-white/10">
-                {/* Category Header */}
-                <button
-                  onClick={() => toggleCategory(category)}
-                  className="w-full bg-sw-black hover:bg-white/[0.02] transition-colors p-6 flex justify-between items-center group"
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="font-mono text-xs text-sw-accent border border-sw-accent px-2 py-1">
-                      [{categorySkills.length}]
-                    </span>
-                    <h3 className="text-xl font-bold uppercase">{translatedCategory}</h3>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: isExpanded ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-sw-accent text-2xl"
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`relative min-h-11 px-4 py-2 font-mono text-xs uppercase transition-colors ${
+                      isActive
+                        ? 'text-sw-black'
+                        : 'text-gray-500 hover:text-white'
+                    }`}
                   >
-                    ▼
-                  </motion.div>
-                </button>
+                    {isActive && (
+                      <motion.span
+                        layoutId="active-skill-category"
+                        className="absolute inset-0 bg-sw-accent"
+                        transition={{ duration: 0.2, ease: 'easeOut' }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      {category}
+                      <span className={isActive ? 'text-black/60' : 'text-sw-accent'}>
+                        [{categorySkills.length}]
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
-                {/* Skills Grid */}
-                <AnimatePresence>
-                  {isExpanded && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
+              {activeSkills.map((skill, index) => (
+                <motion.div
+                  key={`${activeCategory}-${skill.name}`}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: index * 0.025 }}
+                  className="group bg-sw-black px-4 py-3 md:px-5 md:py-4 hover:bg-white/[0.025] transition-colors"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <h4 className="min-w-0 break-words font-mono text-[11px] uppercase tracking-widest text-gray-300 group-hover:text-white transition-colors">
+                      {formatSkillName(skill.name)}
+                    </h4>
+                    <span className="flex-shrink-0 font-mono text-xs text-sw-accent/80">
+                      {skill.level}%
+                    </span>
+                  </div>
+
+                  <div className="mt-3 h-px w-full bg-white/10 overflow-hidden">
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
-                        {categorySkills.map((skill) => (
-                          <motion.div
-                            key={skill.name}
-                            className="bg-sw-black p-8 group hover:bg-white/[0.02] transition-colors relative overflow-hidden ring-1 ring-white/5 hover:ring-sw-accent/50"
-                            whileHover={{ scale: 1.02, zIndex: 10 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                          >
-                            {/* Hover Corner */}
-                            <div className="absolute top-0 right-0 w-0 h-0 border-t-[30px] border-r-[30px] border-t-transparent border-r-sw-accent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                            {/* Hover Glow */}
-                            <div className="absolute -inset-1 bg-sw-accent/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                            <div className="flex justify-between items-start mb-8 relative z-10">
-                              <h4 className="font-mono text-xs text-gray-500 uppercase tracking-widest border border-white/10 px-2 py-1 group-hover:border-sw-accent/50 group-hover:text-sw-accent transition-colors">
-                                {skill.name.replace(/_/g, ' ')}
-                              </h4>
-                              <span className="font-mono text-sw-accent text-sm">
-                                {skill.level}%
-                              </span>
-                            </div>
-
-                            {/* Tech Progress Bar */}
-                            <div className="w-full h-2 bg-white/5 relative flex gap-1 z-10">
-                              {[...Array(10)].map((_, i) => {
-                                const isFilled = (skill.level / 10) > i;
-                                return (
-                                  <motion.div
-                                    key={i}
-                                    className="h-full flex-1"
-                                    initial={{ opacity: 0, backgroundColor: isFilled ? '#ccff00' : 'transparent' }}
-                                    whileInView={{
-                                      opacity: isFilled ? 1 : 0,
-                                      backgroundColor: isFilled ? '#ccff00' : '#222'
-                                    }}
-                                    viewport={{ once: true }}
-                                    transition={{
-                                      duration: 0.2,
-                                      delay: i * 0.05
-                                    }}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                      className="h-full bg-sw-accent"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ duration: 0.45, delay: index * 0.025, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
 
       </div>

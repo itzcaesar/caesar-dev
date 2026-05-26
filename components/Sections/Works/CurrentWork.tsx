@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Github, ExternalLink } from 'lucide-react';
-import { CURRENT_PROJECTS } from '@/constants';
-import { useApp } from '@/contexts/AppContext';
-import { useSound } from '@/contexts/AudioContext';
-import { translations } from '@/locales/translations';
+import { Github } from 'lucide-react';
 import { RevealOnScroll } from '@/components/Layout/RevealOnScroll';
-import { ProjectStatus } from '@/types';
+import type { CurrentProject, ProjectStatus, SiteSettings, WorksPageContent } from '@/types';
 
-const CurrentWork: React.FC = () => {
-  const { language } = useApp();
-  const { playSound } = useSound();
-  const t = translations[language].works.currentWork;
+type CurrentWorkProps = {
+  content: WorksPageContent['currentWorkSection'];
+  currentProjects: CurrentProject[];
+  uiLabels: SiteSettings['uiLabels'];
+};
+
+const CurrentWork: React.FC<CurrentWorkProps> = ({ content, currentProjects, uiLabels }) => {
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   const handleImageError = (projectId: string) => {
@@ -32,30 +31,30 @@ const CurrentWork: React.FC = () => {
   const getStatusLabel = (status: ProjectStatus) => {
     switch (status) {
       case 'in-progress':
-        return t.status.inProgress;
+        return content.statusLabels.inProgress;
       case 'planning':
-        return t.status.planning;
+        return content.statusLabels.planning;
       case 'on-hold':
-        return t.status.onHold;
+        return content.statusLabels.onHold;
     }
   };
 
-  if (CURRENT_PROJECTS.length === 0) {
+  if (currentProjects.length === 0) {
     return (
-      <section className="py-16 md:py-24 lg:py-32 px-4 sm:px-6 md:px-8 lg:px-12 bg-sw-black relative z-20">
+      <section className="py-10 md:py-12 px-4 sm:px-6 md:px-8 lg:px-12 bg-sw-black relative z-20">
         <div className="max-w-[1400px] mx-auto w-full">
           <RevealOnScroll width="100%">
-            <div className="flex flex-col gap-2 mb-12 md:mb-20">
-              <span className="font-mono text-sw-accent text-xs uppercase">
-                {t.subtitle}
-              </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-tight">
-                <span className="text-sw-accent">//</span> {t.title}
-              </h2>
-            </div>
-            <div className="text-center py-12 md:py-20 border border-white/10 bg-sw-black/50">
-              <p className="font-mono text-gray-500 text-xs sm:text-sm">
-                {t.noData}
+            <div className="border border-white/10 bg-sw-black/50 px-5 py-5 md:flex md:items-center md:justify-between">
+              <div>
+                <span className="font-mono text-sw-accent text-xs uppercase">
+                  {content.subtitle}
+                </span>
+                <h2 className="mt-2 text-2xl md:text-3xl font-bold uppercase tracking-tight">
+                  <span className="text-sw-accent">//</span> {content.title}
+                </h2>
+              </div>
+              <p className="mt-4 md:mt-0 font-mono text-gray-500 text-xs sm:text-sm uppercase">
+                {content.noDataLabel}
               </p>
             </div>
           </RevealOnScroll>
@@ -65,27 +64,31 @@ const CurrentWork: React.FC = () => {
   }
 
   return (
-    <section className="py-16 md:py-24 lg:py-32 px-4 sm:px-6 md:px-8 lg:px-12 bg-sw-black relative z-20">
+    <section className="py-12 md:py-16 px-4 sm:px-6 md:px-8 lg:px-12 bg-sw-black relative z-20">
       <div className="max-w-[1400px] mx-auto w-full">
         <RevealOnScroll width="100%">
-          <div className="flex flex-col gap-2 mb-12 md:mb-20">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div className="flex flex-col gap-2">
             <span className="font-mono text-sw-accent text-xs uppercase">
-              {t.subtitle}
+              {content.subtitle}
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-tight">
-              <span className="text-sw-accent">//</span> {t.title}
+              <span className="text-sw-accent">//</span> {content.title}
             </h2>
+            </div>
+            <p className="font-mono text-xs uppercase text-gray-500">
+              {currentProjects.length} {content.activeRecordsLabel}
+            </p>
           </div>
         </RevealOnScroll>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {CURRENT_PROJECTS.map((project, index) => (
+          {currentProjects.map((project, index) => (
             <div key={project.id}>
               <RevealOnScroll delay={index * 0.08}>
                 <motion.div
-                  className="group relative border-2 border-white/30 bg-sw-dark/90 backdrop-blur overflow-hidden hover:border-sw-accent transition-colors duration-300"
-                  onMouseEnter={() => playSound('hover')}
-                  whileHover={{ y: -4, scale: 1.02 }}
+                  className="group relative border border-white/20 bg-sw-black/80 backdrop-blur overflow-hidden hover:border-sw-accent transition-colors duration-300 h-full"
+                  whileHover={{ y: -4 }}
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                   style={{ willChange: 'transform' }}
                 >
@@ -102,10 +105,10 @@ const CurrentWork: React.FC = () => {
 
                   {/* Project Image */}
                   <div className="relative h-40 sm:h-48 md:h-52 overflow-hidden bg-sw-dark">
-                    {imageErrors[project.id] ? (
+                    {imageErrors[project.id] || !(project.imageFile || project.imageUrl) ? (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-sw-dark to-sw-black">
                         <span className="font-mono text-[10px] sm:text-xs text-gray-600">
-                          IMAGE_NOT_FOUND
+                          {uiLabels.imageNotFound}
                         </span>
                       </div>
                     ) : (
@@ -129,7 +132,7 @@ const CurrentWork: React.FC = () => {
                   </div>
 
                   {/* Project Content */}
-                  <div className="p-4 sm:p-6">
+                  <div className="p-4 sm:p-5">
                     {/* Title */}
                     <h3 className="text-lg sm:text-xl font-bold uppercase mb-2 sm:mb-3 text-white group-hover:text-sw-accent transition-colors">
                       {project.title}
@@ -157,7 +160,7 @@ const CurrentWork: React.FC = () => {
                       <div className="mb-3 sm:mb-4">
                         <div className="flex justify-between items-center mb-1.5 sm:mb-2">
                           <span className="text-[9px] sm:text-[10px] font-mono text-gray-500 uppercase">
-                            {t.progress}
+                            {content.progressLabel}
                           </span>
                           <span className="text-[9px] sm:text-[10px] font-mono text-sw-accent">
                             {project.progress}%
@@ -179,12 +182,12 @@ const CurrentWork: React.FC = () => {
                     <div className="space-y-0.5 sm:space-y-1 mb-3 sm:mb-4 text-[9px] sm:text-[10px] font-mono text-gray-500">
                       {project.lastUpdated && (
                         <div>
-                          {t.lastUpdated}: <span className="text-gray-400">{project.lastUpdated}</span>
+                          {content.lastUpdatedLabel}: <span className="text-gray-400">{project.lastUpdated}</span>
                         </div>
                       )}
                       {project.expectedCompletion && (
                         <div>
-                          {t.expectedCompletion}: <span className="text-gray-400">{project.expectedCompletion}</span>
+                          {content.expectedCompletionLabel}: <span className="text-gray-400">{project.expectedCompletion}</span>
                         </div>
                       )}
                     </div>
@@ -199,12 +202,10 @@ const CurrentWork: React.FC = () => {
                           className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-mono text-gray-400 hover:text-sw-accent transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
-                            playSound('click');
                           }}
-                          onMouseEnter={() => playSound('hover')}
                         >
                           <Github size={14} className="sm:w-4 sm:h-4" />
-                          <span>REPO</span>
+                          <span>{uiLabels.repoShort}</span>
                         </a>
                       </div>
                     )}
